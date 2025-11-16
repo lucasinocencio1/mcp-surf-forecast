@@ -1,8 +1,7 @@
 
 # Surf Forecast
 
-MVP em Python que usa **Open-Meteo Marine** (grátis, sem API key) para prever altura/período/direção do swell e vento,
-calcula um **surf score (0–10)** e aponta a **melhor hora** para cada spot.
+Create an MVP in Python that uses Open-Meteo Marine (free, no API key required) to forecast swell height, swell period, swell direction, and wind conditions.
 
 ## Como rodar
 

@@ -9,3 +9,8 @@ geopy
 fastmcp
 pydantic
 requests
+psycopg2
+sqlalchemy
+fastapi
+uvicorn
+python-dotenv

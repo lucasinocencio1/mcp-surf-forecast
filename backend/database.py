@@ -1,3 +1,7 @@
+"""
+Database configuration for the surf school booking backend.
+"""
+
 import os
 from typing import Generator
 
@@ -7,42 +11,34 @@ from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 load_dotenv()
 
+
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://user:password@localhost:5432/sibs",
+    "sqlite:///./surf_school.db",  # default for local dev
 )
 
-engine = None
-SessionLocal: sessionmaker | None = None
-_engine_error: Exception | None = None
 
-try:
-    engine = create_engine(
-        DATABASE_URL,
-        pool_pre_ping=True,
-    )
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-except ModuleNotFoundError as exc:
-    _engine_error = exc
-except Exception as exc:  # noqa: BLE001
-    _engine_error = exc
-
-# Base model
 class Base(DeclarativeBase):
-    pass
+    """Base class for all ORM models."""
 
-# context manager to get a database session
+
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {},
+    pool_pre_ping=True,
+)
+
+SessionLocal: sessionmaker[Session] = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine,
+)
+
+
 def get_db() -> Generator[Session, None, None]:
-    if SessionLocal is None:
-        raise RuntimeError(
-            "Database session factory is unavailable. "
-            "Check that the required database driver is installed "
-            "and DATABASE_URL is correctly configured."
-        ) from _engine_error
-
+    """FastAPI dependency that yields a DB session and closes it afterwards."""
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
-

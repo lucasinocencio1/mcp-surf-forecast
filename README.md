@@ -14,3 +14,10 @@ source .venv/bin/activate  # mac/linux
 
 # 2) instalar deps
 pip install -r requirements.txt
+
+#3) to check backend CRUD
+uvicorn backend.main:app --reload
+
+# to check the frontend use  (here you can check the informations from the spot)
+
+python -m streamlit run frontend/app.py

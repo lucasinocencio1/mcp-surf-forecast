@@ -2,7 +2,7 @@
 surf forecast service - business logic for combining and interpreting data
 """
 
-from models.data_quality import (
+from backend.models import (
     CurrentConditions,
     DailyForecast,
     SurfForecast,

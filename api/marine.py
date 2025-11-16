@@ -4,7 +4,7 @@ marine weather api client
 
 import requests
 from pydantic import ValidationError
-from models.data_quality import MarineResponse
+from backend.models import MarineResponse
 
 
 def get_marine_forecast(latitude: float, longitude: float) -> MarineResponse:

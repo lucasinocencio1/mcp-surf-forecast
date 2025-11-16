@@ -3,11 +3,10 @@ surf forecast mcp server - provides wave and surf conditions for any location
 """
 
 from fastmcp import FastMCP
-from models.data_quality import SurfForecast
 from api.geocoding import geocode_location
 from api.marine import get_marine_forecast
 from api.weather import weather_forecast
-from models.data_quality import MarineResponse, WeatherResponse
+from backend.models import MarineResponse, WeatherResponse, SurfForecast
 from services import ForecastService
 
 # create server

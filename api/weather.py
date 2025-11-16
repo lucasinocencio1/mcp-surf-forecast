@@ -4,7 +4,7 @@ weather forecast api client
 
 import requests
 from pydantic import ValidationError
-from models.data_quality import WeatherResponse
+from backend.models import WeatherResponse
 
 
 def weather_forecast(latitude: float, longitude: float) -> WeatherResponse:

@@ -101,3 +101,7 @@ def get_surf_forecast(city_name: str) -> str:
     
     # return as llm-optimized text format
     return forecast.to_llm_context()
+
+if __name__ == "__main__":
+    # start the FastMCP server
+    mcp.run()

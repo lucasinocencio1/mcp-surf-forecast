@@ -4,7 +4,7 @@ marine weather api client
 
 import requests
 from pydantic import ValidationError
-from models import MarineResponse
+from models.data_quality import MarineResponse
 
 
 def get_marine_forecast(latitude: float, longitude: float) -> MarineResponse:
@@ -29,7 +29,8 @@ def get_marine_forecast(latitude: float, longitude: float) -> MarineResponse:
     params = {
         "latitude": latitude,
         "longitude": longitude,
-        "hourly": [
+        # Open-Meteo expects comma-separated strings for fields
+        "hourly": ",".join([
             "wave_height",
             "wave_direction",
             "wave_period",
@@ -38,9 +39,9 @@ def get_marine_forecast(latitude: float, longitude: float) -> MarineResponse:
             "wind_wave_period",
             "swell_wave_height",
             "swell_wave_direction",
-            "swell_wave_period"
-        ],
-        "daily": [
+            "swell_wave_period",
+        ]),
+        "daily": ",".join([
             "wave_height_max",
             "wave_direction_dominant",
             "wave_period_max",
@@ -49,8 +50,8 @@ def get_marine_forecast(latitude: float, longitude: float) -> MarineResponse:
             "wind_wave_period_max",
             "swell_wave_height_max",
             "swell_wave_direction_dominant",
-            "swell_wave_period_max"
-        ],
+            "swell_wave_period_max",
+        ]),
         "timezone": "auto",
         "forecast_days": 7
     }

@@ -10,14 +10,11 @@ from models import WeatherResponse
 def weather_forecast(latitude: float, longitude: float) -> WeatherResponse:
     """
     fetch weather forecast data from open-meteo api with validation
-    
     args:
         latitude: latitude coordinate
         longitude: longitude coordinate
-    
     returns:
-        validated weather response
-    
+        validated weather response  
     raises:
         requests.HTTPError: if api request fails
         ValidationError: if api response doesn't match expected schema

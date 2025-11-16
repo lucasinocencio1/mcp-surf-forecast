@@ -20,3 +20,4 @@ uvicorn backend.main:app --reload
 # to check the frontend use  (here you can check the informations from the spot)
 
 python -m streamlit run frontend/app.py
+# Backend_python_crud

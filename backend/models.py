@@ -1,25 +1,11 @@
 """
-Pydantic models for surf forecast (existing)
-and SQLAlchemy ORM models for the surf school booking system.
+Pydantic models for surf forecast and API response validation.
 """
 
 from typing import Optional
-from datetime import datetime, date, time
+from datetime import datetime
 
 from pydantic import BaseModel, Field, field_validator, model_validator
-from sqlalchemy import (
-    Boolean,
-    Column,
-    Date,
-    Float,
-    ForeignKey,
-    Integer,
-    String,
-    Time,
-)
-from sqlalchemy.orm import relationship
-
-from .database import Base
 
 
 class CurrentConditions(BaseModel):
@@ -202,77 +188,6 @@ __all__ = [
     "DailyForecast",
     "SurfForecast",
     "MarineResponse",
-    "WeatherResponse"
+    "WeatherResponse",
 ]
-
-#  SQLAlchemy ORM models (booking system)
-
-
-class SurfSchool(Base):
-    __tablename__ = "surf_schools"
-
-    id: int = Column(Integer, primary_key=True, index=True)
-    name: str = Column(String(255), nullable=False)
-    location: str = Column(String(255), nullable=False)
-    description: str = Column(String(1024), nullable=True)
-    rating: float = Column(Float, nullable=False, default=0.0)
-
-    instructors = relationship("Instructor", back_populates="school", cascade="all, delete-orphan")
-    lessons = relationship("Lesson", back_populates="school", cascade="all, delete-orphan")
-
-
-class Instructor(Base):
-    __tablename__ = "instructors"
-
-    id: int = Column(Integer, primary_key=True, index=True)
-    name: str = Column(String(255), nullable=False)
-    experience_years: int = Column(Integer, nullable=False, default=0)
-    school_id: int = Column(Integer, ForeignKey("surf_schools.id"), nullable=False)
-
-    school = relationship("SurfSchool", back_populates="instructors")
-    lessons = relationship("Lesson", back_populates="instructor", cascade="all, delete-orphan")
-
-
-class Lesson(Base):
-    __tablename__ = "lessons"
-
-    id: int = Column(Integer, primary_key=True, index=True)
-    school_id: int = Column(Integer, ForeignKey("surf_schools.id"), nullable=False)
-    instructor_id: int = Column(Integer, ForeignKey("instructors.id"), nullable=False)
-    level: str = Column(String(32), nullable=False)  # beginner/intermediate/advanced
-    duration_minutes: int = Column(Integer, nullable=False)
-    price: float = Column(Float, nullable=False)
-
-    school = relationship("SurfSchool", back_populates="lessons")
-    instructor = relationship("Instructor", back_populates="lessons")
-    schedules = relationship("Schedule", back_populates="lesson", cascade="all, delete-orphan")
-    bookings = relationship("Booking", back_populates="lesson", cascade="all, delete-orphan")
-
-
-class Schedule(Base):
-    __tablename__ = "schedules"
-
-    id: int = Column(Integer, primary_key=True, index=True)
-    lesson_id: int = Column(Integer, ForeignKey("lessons.id"), nullable=False)
-    date: date = Column(Date, nullable=False)
-    start_time: time = Column(Time, nullable=False)
-    end_time: time = Column(Time, nullable=False)
-    available: bool = Column(Boolean, nullable=False, default=True)
-
-    lesson = relationship("Lesson", back_populates="schedules")
-    bookings = relationship("Booking", back_populates="schedule", cascade="all, delete-orphan")
-
-
-class Booking(Base):
-    __tablename__ = "bookings"
-
-    id: int = Column(Integer, primary_key=True, index=True)
-    student_name: str = Column(String(255), nullable=False)
-    student_email: str = Column(String(255), nullable=False, index=True)
-    lesson_id: int = Column(Integer, ForeignKey("lessons.id"), nullable=False)
-    schedule_id: int = Column(Integer, ForeignKey("schedules.id"), nullable=False)
-    status: str = Column(String(32), nullable=False, default="confirmed")  # pending/confirmed/cancelled
-
-    lesson = relationship("Lesson", back_populates="bookings")
-    schedule = relationship("Schedule", back_populates="bookings")
 

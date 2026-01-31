@@ -14,10 +14,8 @@ source .venv/bin/activate  # mac/linux
 # 2) instalar deps
 pip install -r requirements.txt
 
-#3) to check backend CRUD
+# 3) run the Surf Forecast API
 uvicorn backend.main:app --reload
 
-# to check the frontend use  (here you can check the informations from the spot)
-
+# 4) run the frontend (Streamlit)
 python -m streamlit run frontend/app.py
-# Backend_python_crud

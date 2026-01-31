@@ -1,5 +1,16 @@
 """
 surf forecast mcp server - provides wave and surf conditions for any location
+how to run:
+python server.py
+
+how to use:
+mcp server --url http://localhost:8000
+
+how to use the tool:
+mcp server --url http://localhost:8000 --tool get_surf_forecast --args "city_name"
+
+how to use the tool:
+mcp server --url http://localhost:8000 --tool get_surf_forecast --args "city_name"
 """
 
 from fastmcp import FastMCP

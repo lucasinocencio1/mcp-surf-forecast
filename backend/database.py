@@ -1,5 +1,5 @@
 """
-Database configuration for the surf school booking backend.
+Database configuration (reserved for future use).
 """
 
 import os

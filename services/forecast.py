@@ -182,7 +182,6 @@ class ForecastService:
 
         # assess surf quality
         current_dict = current.model_dump()
-        forecast_dict = [f.model_dump() for f in forecast_days]
         quality_notes = ForecastService.assess_surf_quality(current_dict)
 
         return SurfForecast(

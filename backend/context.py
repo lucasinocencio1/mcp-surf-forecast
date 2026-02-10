@@ -36,12 +36,6 @@ def format_forecast_to_llm_context(forecast: "SurfForecast") -> str:
     from services.helpers import degrees_to_compass
 
     cc = forecast.current_conditions
-    wd = _fmt_int(cc.wind_direction_deg) if cc.wind_direction_deg is not None else "N/A"
-    sd = (
-        _fmt_int(cc.swell_wave_direction_deg)
-        if cc.swell_wave_direction_deg is not None
-        else "N/A"
-    )
     lines = [
         f"# Surf Forecast: {forecast.location}",
         "",
@@ -65,7 +59,7 @@ def format_forecast_to_llm_context(forecast: "SurfForecast") -> str:
                     time_str = dt.strftime("%H:%M")
                 else:
                     time_str = hour.timestamp[-5:]
-            except:
+            except Exception:
                 time_str = (
                     hour.timestamp.split("T")[1]
                     if "T" in hour.timestamp
@@ -83,7 +77,6 @@ def format_forecast_to_llm_context(forecast: "SurfForecast") -> str:
     lines.append("## 5-Day Forecast")
 
     for day in forecast.forecast_5day:
-        wave_dir = degrees_to_compass(day.wave_direction_dominant_deg or 0).upper()
         swell_dir = degrees_to_compass(
             day.swell_wave_direction_dominant_deg or 0
         ).upper()

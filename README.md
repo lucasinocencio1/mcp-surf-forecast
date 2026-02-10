@@ -12,6 +12,16 @@ You can use the backend or view the results for better understanding using Strea
 
 ## Here is how you activate following the mcp json example
 
+```bash
+{
+  "mcpServers": {
+    "surf-forecast": {
+      "command": "python",
+      "args": ["server.py"]
+    }
+  }
+}
+```
 ![Activate MCP](assets/activate.png)
 
 ## Example of forecasting

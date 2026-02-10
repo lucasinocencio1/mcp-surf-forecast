@@ -26,9 +26,11 @@ uvicorn backend.main:app --reload
 
 # 4) run the frontend (Streamlit)
 python -m streamlit run frontend/app.py
+```
 
 
 ## Key Makefile targets (use `make help` to see in terminal)
+
 ```bash
   make help          - Show this help message
   make setup         - Create virtual environment and install dependencies

@@ -15,13 +15,12 @@ class ForecastService:
     """service for processing and interpreting surf forecast data"""
     
     @staticmethod
-    def assess_surf_quality(current: dict, forecast: list[dict]) -> str:
+    def assess_surf_quality(current: dict) -> str:
         """
         provide surf quality assessment based on wave and wind data
         
         args:
             current: current conditions dictionary
-            forecast: list of daily forecast dictionaries
         
         returns:
             human-readable surf quality assessment string
@@ -165,7 +164,7 @@ class ForecastService:
         # assess surf quality
         current_dict = current.model_dump()
         forecast_dict = [f.model_dump() for f in forecast_days]
-        quality_notes = ForecastService.assess_surf_quality(current_dict, forecast_dict)
+        quality_notes = ForecastService.assess_surf_quality(current_dict)
         
         return SurfForecast(
             location=location_name,

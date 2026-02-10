@@ -17,7 +17,7 @@ from fastmcp import FastMCP
 from api.geocoding import geocode_location
 from api.marine import get_marine_forecast
 from api.weather import weather_forecast
-from backend.models import MarineResponse, WeatherResponse, SurfForecast
+from backend.models import SurfForecast
 from services import ForecastService
 
 # create server

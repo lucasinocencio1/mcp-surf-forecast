@@ -15,13 +15,13 @@ _GEOCODE_RETRY_DELAY = 1.0
 def geocode_location(city_name: str) -> tuple[float, float, str]:
     """
     convert city name to latitude and longitude coordinates
-    
+
     args:
         city_name: name of the city or location
-    
+
     returns:
         tuple of (latitude, longitude, full_location_name)
-    
+
     raises:
         ValueError: if location cannot be found
     """
@@ -40,8 +40,11 @@ def geocode_location(city_name: str) -> tuple[float, float, str]:
 
     return location.latitude, location.longitude, location.address
 
+
 if __name__ == "__main__":
-    city_query = " ".join(sys.argv[1:]).strip() or "Lisbon" #example: python api/geocoding.py "Lisbon"
+    city_query = (
+        " ".join(sys.argv[1:]).strip() or "Lisbon"
+    )  # example: python api/geocoding.py "Lisbon"
     try:
         lat, lon, addr = geocode_location(city_query)
         print(addr)

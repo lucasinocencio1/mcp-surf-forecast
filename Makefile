@@ -72,7 +72,7 @@ venv: ## Create virtual environment
 format: ## Format code with black
 	@echo "$(BLUE)Formatting code with black...$(NC)"
 	@if command -v black > /dev/null; then \
-		black . --exclude="$(VENV)|.git|__pycache__|*.pyc"; \
+		black . --exclude='\.venv|\.git|__pycache__'; \
 	else \
 		echo "$(YELLOW)black not found. Install with: make install-dev$(NC)"; \
 		exit 1; \

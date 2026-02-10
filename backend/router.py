@@ -15,7 +15,9 @@ router = APIRouter(tags=["forecast"])
 
 
 @router.get("/forecast", response_model=SurfForecast)
-def get_forecast(city: str = Query(..., min_length=1, description="City or location name")):
+def get_forecast(
+    city: str = Query(..., min_length=1, description="City or location name")
+):
     """
     Get surf forecast for a location by city name.
 

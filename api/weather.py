@@ -28,40 +28,44 @@ def weather_forecast(latitude: float, longitude: float) -> WeatherResponse:
         latitude: latitude coordinate
         longitude: longitude coordinate
     returns:
-        validated weather response  
+        validated weather response
     raises:
         requests.HTTPError: if api request fails
         ValidationError: if api response doesn't match expected schema
     """
     # open-meteo weather api endpoint
     url = "https://api.open-meteo.com/v1/forecast"
-    
+
     # parameters for the api request
     params = {
         "latitude": latitude,
         "longitude": longitude,
         # Use correct parameter names per Open-Meteo and send as comma-separated strings
-        "hourly": ",".join([
-            "temperature_2m",
-            "wind_speed_10m",
-            "wind_direction_10m",
-            "wind_gusts_10m",
-        ]),
-        "daily": ",".join([
-            "temperature_2m_max",
-            "temperature_2m_min",
-            "wind_speed_10m_max",
-            "wind_direction_10m_dominant",
-            "wind_gusts_10m_max",
-        ]),
+        "hourly": ",".join(
+            [
+                "temperature_2m",
+                "wind_speed_10m",
+                "wind_direction_10m",
+                "wind_gusts_10m",
+            ]
+        ),
+        "daily": ",".join(
+            [
+                "temperature_2m_max",
+                "temperature_2m_min",
+                "wind_speed_10m_max",
+                "wind_direction_10m_dominant",
+                "wind_gusts_10m_max",
+            ]
+        ),
         "windspeed_unit": "kn",  # knots for surfing
         "timezone": "auto",
-        "forecast_days": 7
+        "forecast_days": 7,
     }
-    
+
     response = _session.get(url, params=params, timeout=_REQUEST_TIMEOUT)
     response.raise_for_status()
-    
+
     # validate response
     try:
         data = response.json()
@@ -94,6 +98,7 @@ def weather_forecast(latitude: float, longitude: float) -> WeatherResponse:
 
 if __name__ == "__main__":
     import sys
+
     latitude = float(sys.argv[1])
     longitude = float(sys.argv[2])
     weather = weather_forecast(latitude, longitude)

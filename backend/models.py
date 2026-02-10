@@ -9,19 +9,19 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class CurrentConditions(BaseModel):
-    """current surf conditions with validation"""
+    """current surf conditions with validation; None = missing data from API"""
     timestamp: str = Field(description="current time in iso format")
-    wave_height_m: float = Field(ge=0, le=30, description="significant wave height in meters")
-    swell_wave_height_m: float = Field(ge=0, le=30, description="swell wave height in meters")
-    wind_wave_height_m: float = Field(ge=0, le=30, description="wind wave height in meters")
-    wave_direction_deg: float = Field(ge=0, le=360, description="wave direction in degrees")
-    swell_wave_direction_deg: float = Field(ge=0, le=360, description="swell wave direction in degrees")
-    wave_period_s: float = Field(ge=0, le=30, description="wave period in seconds")
-    swell_wave_period_s: float = Field(ge=0, le=30, description="swell wave period in seconds")
-    wind_speed_knots: float = Field(ge=0, le=200, description="wind speed in knots")
-    wind_direction_deg: float = Field(ge=0, le=360, description="wind direction in degrees")
-    wind_gusts_knots: float = Field(ge=0, le=200, description="wind gusts in knots")
-    temperature_c: float = Field(ge=-50, le=60, description="air temperature in celsius")
+    wave_height_m: Optional[float] = Field(default=None, ge=0, le=30, description="significant wave height in meters")
+    swell_wave_height_m: Optional[float] = Field(default=None, ge=0, le=30, description="swell wave height in meters")
+    wind_wave_height_m: Optional[float] = Field(default=None, ge=0, le=30, description="wind wave height in meters")
+    wave_direction_deg: Optional[float] = Field(default=None, ge=0, le=360, description="wave direction in degrees")
+    swell_wave_direction_deg: Optional[float] = Field(default=None, ge=0, le=360, description="swell wave direction in degrees")
+    wave_period_s: Optional[float] = Field(default=None, ge=0, le=30, description="wave period in seconds")
+    swell_wave_period_s: Optional[float] = Field(default=None, ge=0, le=30, description="swell wave period in seconds")
+    wind_speed_knots: Optional[float] = Field(default=None, ge=0, le=200, description="wind speed in knots")
+    wind_direction_deg: Optional[float] = Field(default=None, ge=0, le=360, description="wind direction in degrees")
+    wind_gusts_knots: Optional[float] = Field(default=None, ge=0, le=200, description="wind gusts in knots")
+    temperature_c: Optional[float] = Field(default=None, ge=-50, le=60, description="air temperature in celsius")
 
     @field_validator("timestamp")
     @classmethod
@@ -35,12 +35,12 @@ class CurrentConditions(BaseModel):
 
     @model_validator(mode='after')
     def validate_wave_components(self):
-        """validate wave height components sum logically"""
+        """validate wave height components sum logically; skip if any is missing"""
         total = self.wave_height_m
         swell = self.swell_wave_height_m
         wind = self.wind_wave_height_m
-        
-        # allow some tolerance for measurement differences
+        if total is None or swell is None or wind is None:
+            return self
         if swell + wind > total * 1.5:
             raise ValueError(
                 f"wave components inconsistent: swell ({swell}) + wind ({wind}) "
@@ -49,20 +49,20 @@ class CurrentConditions(BaseModel):
         return self
 
 class DailyForecast(BaseModel):
-    """daily surf forecast with validation"""
+    """daily surf forecast with validation; None = missing data from API"""
     date: str = Field(description="date in yyyy-mm-dd format")
-    wave_height_max_m: float = Field(ge=0, le=30, description="maximum wave height in meters")
-    swell_wave_height_max_m: float = Field(ge=0, le=30, description="maximum swell wave height in meters")
-    wind_wave_height_max_m: float = Field(ge=0, le=30, description="maximum wind wave height in meters")
-    wave_direction_dominant_deg: float = Field(ge=0, le=360, description="dominant wave direction in degrees")
-    swell_wave_direction_dominant_deg: float = Field(ge=0, le=360, description="dominant swell wave direction in degrees")
-    wave_period_max_s: float = Field(ge=0, le=30, description="maximum wave period in seconds")
-    swell_wave_period_max_s: float = Field(ge=0, le=30, description="maximum swell wave period in seconds")
-    wind_speed_max_knots: float = Field(ge=0, le=200, description="maximum wind speed in knots")
-    wind_direction_dominant_deg: float = Field(ge=0, le=360, description="dominant wind direction in degrees")
-    wind_gusts_max_knots: float = Field(ge=0, le=200, description="maximum wind gusts in knots")
-    temperature_max_c: float = Field(ge=-50, le=60, description="maximum temperature in celsius")
-    temperature_min_c: float = Field(ge=-50, le=60, description="minimum temperature in celsius")
+    wave_height_max_m: Optional[float] = Field(default=None, ge=0, le=30, description="maximum wave height in meters")
+    swell_wave_height_max_m: Optional[float] = Field(default=None, ge=0, le=30, description="maximum swell wave height in meters")
+    wind_wave_height_max_m: Optional[float] = Field(default=None, ge=0, le=30, description="maximum wind wave height in meters")
+    wave_direction_dominant_deg: Optional[float] = Field(default=None, ge=0, le=360, description="dominant wave direction in degrees")
+    swell_wave_direction_dominant_deg: Optional[float] = Field(default=None, ge=0, le=360, description="dominant swell wave direction in degrees")
+    wave_period_max_s: Optional[float] = Field(default=None, ge=0, le=30, description="maximum wave period in seconds")
+    swell_wave_period_max_s: Optional[float] = Field(default=None, ge=0, le=30, description="maximum swell wave period in seconds")
+    wind_speed_max_knots: Optional[float] = Field(default=None, ge=0, le=200, description="maximum wind speed in knots")
+    wind_direction_dominant_deg: Optional[float] = Field(default=None, ge=0, le=360, description="dominant wind direction in degrees")
+    wind_gusts_max_knots: Optional[float] = Field(default=None, ge=0, le=200, description="maximum wind gusts in knots")
+    temperature_max_c: Optional[float] = Field(default=None, ge=-50, le=60, description="maximum temperature in celsius")
+    temperature_min_c: Optional[float] = Field(default=None, ge=-50, le=60, description="minimum temperature in celsius")
 
     @field_validator("date")
     @classmethod
@@ -76,7 +76,9 @@ class DailyForecast(BaseModel):
 
     @model_validator(mode='after')
     def validate_temperature_range(self):
-        """validate min temperature is less than max"""
+        """validate min temperature is less than max; skip if any is missing"""
+        if self.temperature_min_c is None or self.temperature_max_c is None:
+            return self
         if self.temperature_min_c > self.temperature_max_c:
             raise ValueError(
                 f"min temperature ({self.temperature_min_c}) cannot be greater than "

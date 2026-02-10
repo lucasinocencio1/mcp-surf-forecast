@@ -23,6 +23,11 @@ def get_forecast(city: str = Query(..., min_length=1, description="City or locat
     and surf quality context.
     """
     city = city.strip()
+    if not city:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Query parameter 'city' cannot be empty or only spaces.",
+        ) from None
     try:
         lat, lon, full_name = geocode_location(city)
     except Exception as e:

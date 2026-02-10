@@ -26,10 +26,10 @@ class ForecastService:
         returns:
             human-readable surf quality assessment string
         """
-        wave_height = current.get('wave_height_m', 0)
-        swell_height = current.get('swell_wave_height_m', 0)
-        period = current.get('wave_period_s', 0)
-        wind_speed = current.get('wind_speed_knots', 0)
+        wave_height = current.get('wave_height_m') or 0
+        swell_height = current.get('swell_wave_height_m') or 0
+        period = current.get('wave_period_s') or 0
+        wind_speed = current.get('wind_speed_knots') or 0
         
         notes = []
         
@@ -101,19 +101,25 @@ class ForecastService:
         """
         # get current conditions (first hourly data point)
         current_idx = 0
+        def _v(lst, i):
+            if i < len(lst):
+                v = lst[i]
+                return v if v is not None else None
+            return None
+
         current = CurrentConditions(
             timestamp=marine_data.hourly.time[current_idx],
-            wave_height_m=marine_data.hourly.wave_height[current_idx] or 0.0,
-            swell_wave_height_m=marine_data.hourly.swell_wave_height[current_idx] or 0.0,
-            wind_wave_height_m=marine_data.hourly.wind_wave_height[current_idx] or 0.0,
-            wave_direction_deg=marine_data.hourly.wave_direction[current_idx] or 0.0,
-            swell_wave_direction_deg=marine_data.hourly.swell_wave_direction[current_idx] or 0.0,
-            wave_period_s=marine_data.hourly.wave_period[current_idx] or 0.0,
-            swell_wave_period_s=marine_data.hourly.swell_wave_period[current_idx] or 0.0,
-            wind_speed_knots=weather_data.hourly.windspeed_10m[current_idx] or 0.0,
-            wind_direction_deg=weather_data.hourly.winddirection_10m[current_idx] or 0.0,
-            wind_gusts_knots=weather_data.hourly.windgusts_10m[current_idx] or 0.0,
-            temperature_c=weather_data.hourly.temperature_2m[current_idx] or 0.0
+            wave_height_m=_v(marine_data.hourly.wave_height, current_idx),
+            swell_wave_height_m=_v(marine_data.hourly.swell_wave_height, current_idx),
+            wind_wave_height_m=_v(marine_data.hourly.wind_wave_height, current_idx),
+            wave_direction_deg=_v(marine_data.hourly.wave_direction, current_idx),
+            swell_wave_direction_deg=_v(marine_data.hourly.swell_wave_direction, current_idx),
+            wave_period_s=_v(marine_data.hourly.wave_period, current_idx),
+            swell_wave_period_s=_v(marine_data.hourly.swell_wave_period, current_idx),
+            wind_speed_knots=_v(weather_data.hourly.windspeed_10m, current_idx),
+            wind_direction_deg=_v(weather_data.hourly.winddirection_10m, current_idx),
+            wind_gusts_knots=_v(weather_data.hourly.windgusts_10m, current_idx),
+            temperature_c=_v(weather_data.hourly.temperature_2m, current_idx),
         )
         
         # get next 6 hours (every 3 hours: +3, +6, +9, +12 hours)
@@ -122,17 +128,17 @@ class ForecastService:
             if hour_idx < len(marine_data.hourly.time):
                 hour_forecast = CurrentConditions(
                     timestamp=marine_data.hourly.time[hour_idx],
-                    wave_height_m=marine_data.hourly.wave_height[hour_idx] or 0.0,
-                    swell_wave_height_m=marine_data.hourly.swell_wave_height[hour_idx] or 0.0,
-                    wind_wave_height_m=marine_data.hourly.wind_wave_height[hour_idx] or 0.0,
-                    wave_direction_deg=marine_data.hourly.wave_direction[hour_idx] or 0.0,
-                    swell_wave_direction_deg=marine_data.hourly.swell_wave_direction[hour_idx] or 0.0,
-                    wave_period_s=marine_data.hourly.wave_period[hour_idx] or 0.0,
-                    swell_wave_period_s=marine_data.hourly.swell_wave_period[hour_idx] or 0.0,
-                    wind_speed_knots=weather_data.hourly.windspeed_10m[hour_idx] or 0.0,
-                    wind_direction_deg=weather_data.hourly.winddirection_10m[hour_idx] or 0.0,
-                    wind_gusts_knots=weather_data.hourly.windgusts_10m[hour_idx] or 0.0,
-                    temperature_c=weather_data.hourly.temperature_2m[hour_idx] or 0.0
+                    wave_height_m=_v(marine_data.hourly.wave_height, hour_idx),
+                    swell_wave_height_m=_v(marine_data.hourly.swell_wave_height, hour_idx),
+                    wind_wave_height_m=_v(marine_data.hourly.wind_wave_height, hour_idx),
+                    wave_direction_deg=_v(marine_data.hourly.wave_direction, hour_idx),
+                    swell_wave_direction_deg=_v(marine_data.hourly.swell_wave_direction, hour_idx),
+                    wave_period_s=_v(marine_data.hourly.wave_period, hour_idx),
+                    swell_wave_period_s=_v(marine_data.hourly.swell_wave_period, hour_idx),
+                    wind_speed_knots=_v(weather_data.hourly.windspeed_10m, hour_idx),
+                    wind_direction_deg=_v(weather_data.hourly.winddirection_10m, hour_idx),
+                    wind_gusts_knots=_v(weather_data.hourly.windgusts_10m, hour_idx),
+                    temperature_c=_v(weather_data.hourly.temperature_2m, hour_idx),
                 )
                 hourly_forecasts.append(hour_forecast)
         
@@ -141,18 +147,18 @@ class ForecastService:
         for i in range(min(5, len(marine_data.daily.time))):
             day_forecast = DailyForecast(
                 date=marine_data.daily.time[i],
-                wave_height_max_m=marine_data.daily.wave_height_max[i] or 0.0,
-                swell_wave_height_max_m=marine_data.daily.swell_wave_height_max[i] or 0.0,
-                wind_wave_height_max_m=marine_data.daily.wind_wave_height_max[i] or 0.0,
-                wave_direction_dominant_deg=marine_data.daily.wave_direction_dominant[i] or 0.0,
-                swell_wave_direction_dominant_deg=marine_data.daily.swell_wave_direction_dominant[i] or 0.0,
-                wave_period_max_s=marine_data.daily.wave_period_max[i] or 0.0,
-                swell_wave_period_max_s=marine_data.daily.swell_wave_period_max[i] or 0.0,
-                wind_speed_max_knots=weather_data.daily.windspeed_10m_max[i] or 0.0,
-                wind_direction_dominant_deg=weather_data.daily.winddirection_10m_dominant[i] or 0.0,
-                wind_gusts_max_knots=weather_data.daily.windgusts_10m_max[i] or 0.0,
-                temperature_max_c=weather_data.daily.temperature_2m_max[i] or 0.0,
-                temperature_min_c=weather_data.daily.temperature_2m_min[i] or 0.0
+                wave_height_max_m=_v(marine_data.daily.wave_height_max, i),
+                swell_wave_height_max_m=_v(marine_data.daily.swell_wave_height_max, i),
+                wind_wave_height_max_m=_v(marine_data.daily.wind_wave_height_max, i),
+                wave_direction_dominant_deg=_v(marine_data.daily.wave_direction_dominant, i),
+                swell_wave_direction_dominant_deg=_v(marine_data.daily.swell_wave_direction_dominant, i),
+                wave_period_max_s=_v(marine_data.daily.wave_period_max, i),
+                swell_wave_period_max_s=_v(marine_data.daily.swell_wave_period_max, i),
+                wind_speed_max_knots=_v(weather_data.daily.windspeed_10m_max, i),
+                wind_direction_dominant_deg=_v(weather_data.daily.winddirection_10m_dominant, i),
+                wind_gusts_max_knots=_v(weather_data.daily.windgusts_10m_max, i),
+                temperature_max_c=_v(weather_data.daily.temperature_2m_max, i),
+                temperature_min_c=_v(weather_data.daily.temperature_2m_min, i),
             )
             forecast_days.append(day_forecast)
         

@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "surf-forecast": {
-      "command": "python",
-      "args": ["server.py"]
-    }
-  }
-}

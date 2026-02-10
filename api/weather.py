@@ -3,8 +3,22 @@ weather forecast api client
 """
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from pydantic import ValidationError
 from backend.models import WeatherResponse
+
+# Session with retry: 3 attempts, backoff 1s, retry on 5xx/429 and connection/timeout errors
+_REQUEST_TIMEOUT = 30
+_RETRY_STRATEGY = Retry(
+    total=3,
+    backoff_factor=1,
+    status_forcelist=(500, 502, 503, 504, 429),
+    allowed_methods=("GET",),
+)
+_session = requests.Session()
+_session.mount("https://", HTTPAdapter(max_retries=_RETRY_STRATEGY))
+_session.mount("http://", HTTPAdapter(max_retries=_RETRY_STRATEGY))
 
 
 def weather_forecast(latitude: float, longitude: float) -> WeatherResponse:
@@ -45,7 +59,7 @@ def weather_forecast(latitude: float, longitude: float) -> WeatherResponse:
         "forecast_days": 7
     }
     
-    response = requests.get(url, params=params, timeout=30)
+    response = _session.get(url, params=params, timeout=_REQUEST_TIMEOUT)
     response.raise_for_status()
     
     # validate response

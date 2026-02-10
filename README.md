@@ -5,6 +5,11 @@ A Python-based MCP that uses the Open-Meteo Marine API (free, no API key require
 
 You can use the backend or view the results for better understanding using Streamlit.
 
+
+## Running the MCP Server 🔥
+
+![Surf Forecast MCP](assets/fastmcp-surffcst.png)
+
 ## How to start
 
 ```bash
@@ -21,6 +26,26 @@ uvicorn backend.main:app --reload
 
 # 4) run the frontend (Streamlit)
 python -m streamlit run frontend/app.py
+
+
+## Key Makefile targets (use `make help` to see in terminal)
+```bash
+  make help          - Show this help message
+  make setup         - Create virtual environment and install dependencies
+  make install       - Install dependencies
+  make install-dev   - Install dependencies + dev tools (black, ruff)
+  make venv          - Create virtual environment
+  make format        - Format code with black
+  make lint          - Lint code with ruff
+  make check         - Format and lint code
+  make server        - Run FastAPI backend (uvicorn)
+  make mcp           - Run MCP server
+  make frontend      - Run Streamlit frontend
+  make test          - Run tests (if available)
+  make clean         - Remove cache and temporary files
+  make clean-all     - Clean everything including virtual environment
+  make dev           - Setup development environment
+```
 
 
 ## Response Example: Using Pydantic principles and FastAPI

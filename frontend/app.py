@@ -7,6 +7,9 @@ from api.marine import get_marine_forecast
 from api.weather import weather_forecast
 from services.forecast import ForecastService
 
+# SETUP 
+st.set_page_config(page_title="Surf Forecast PT", page_icon="🌊", layout="wide")
+
 # ===== Tema (Light/Dark.) =====
 if "theme_mode" not in st.session_state:
     st.session_state.theme_mode = "light"  # default
@@ -57,8 +60,6 @@ with c_theme2:
 
 PLOTLY_TEMPLATE, WG_TH_BG, _TEXT = use_theme(st.session_state.theme_mode)
 
-# --------------------------------- SETUP ---------------------------------
-st.set_page_config(page_title="Surf Forecast PT", page_icon="🌊", layout="wide")
 st.title("🌊 Surf Forecast")
 st.caption("Dados: Open-Meteo (Marine + Forecast) + Geocoding (Nominatim)")
 fs = None

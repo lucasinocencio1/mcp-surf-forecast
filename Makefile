@@ -104,7 +104,7 @@ mcp: ## Run MCP server
 frontend: ## Run Streamlit frontend
 	@echo "$(BLUE)Starting Streamlit frontend...$(NC)"
 	@echo "$(YELLOW)Frontend: http://localhost:8501$(NC)"
-	streamlit run frontend/app.py --server.port 8501
+	PYTHONPATH=. streamlit run frontend/app.py --server.port 8501
 
 test: ## Run tests (if available)
 	@echo "$(BLUE)Running tests...$(NC)"

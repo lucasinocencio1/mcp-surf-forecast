@@ -19,7 +19,7 @@ def geocode_location(city_name: str) -> tuple[float, float, str]:
     raises:
         ValueError: if location cannot be found
     """
-    geolocator = Nominatim(user_agent="surf_forecast_mcp")
+    geolocator = Nominatim(user_agent="surf_forecast_mcp", timeout=10)
     location = geolocator.geocode(city_name)
     
     if location is None:

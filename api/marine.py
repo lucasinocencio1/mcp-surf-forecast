@@ -56,7 +56,7 @@ def get_marine_forecast(latitude: float, longitude: float) -> MarineResponse:
         "forecast_days": 7
     }
     
-    response = requests.get(url, params=params)
+    response = requests.get(url, params=params, timeout=30)
     response.raise_for_status()
     
     # validate response

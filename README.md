@@ -10,6 +10,20 @@ You can use the backend or view the results for better understanding using Strea
 
 ![Surf Forecast MCP](assets/fastmcp-surffcst.png)
 
+## Here is how you activate following the mcp json example
+
+![Activate MCP](assets/activate.png)
+
+## Example of forecasting
+
+![Forecasting](assets/forecasting.png)
+
+## Example of bestday
+
+![Best day to surf](assets/bestday.png)
+
+
+
 ## How to start
 
 ```bash

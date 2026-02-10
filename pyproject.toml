@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "surf-forecast"
+version = "1.0.0"
+description = "An open-source Python-based MCP server and API for surf forecast."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+  { name = "Lucas Inocencio" }
+]
+dependencies = [
+  "fastapi>=0.100.0",
+  "fastmcp",
+  "geopy",
+  "pydantic>=2.0",
+  "python-dotenv",
+  "requests",
+  "uvicorn[standard]>=0.22.0",
+  "pandas",
+  "plotly",
+  "streamlit",
+  "beautifulsoup4",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "black",
+  "ruff",
+]

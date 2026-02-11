@@ -7,6 +7,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from pydantic import ValidationError
 from backend.models import WeatherResponse
+from services.helpers import validate_coordinates
 
 # Session with retry: 3 attempts, backoff 1s, retry on 5xx/429 and connection/timeout errors
 _REQUEST_TIMEOUT = 30
@@ -30,9 +31,11 @@ def weather_forecast(latitude: float, longitude: float) -> WeatherResponse:
     returns:
         validated weather response
     raises:
+        ValueError: if coordinates are out of valid range
         requests.HTTPError: if api request fails
         ValidationError: if api response doesn't match expected schema
     """
+    validate_coordinates(latitude, longitude)
     # open-meteo weather api endpoint
     url = "https://api.open-meteo.com/v1/forecast"
 

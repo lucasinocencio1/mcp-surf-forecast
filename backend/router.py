@@ -40,6 +40,11 @@ def get_forecast(
     try:
         marine_data = get_marine_forecast(lat, lon)
         weather_data = weather_forecast(lat, lon)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        ) from e
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,

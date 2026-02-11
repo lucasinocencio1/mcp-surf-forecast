@@ -7,6 +7,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from pydantic import ValidationError
 from backend.models import MarineResponse
+from services.helpers import validate_coordinates
 
 # Session with retry: 3 attempts, backoff 1s, retry on 5xx/429 and connection/timeout errors
 _REQUEST_TIMEOUT = 30
@@ -33,9 +34,11 @@ def get_marine_forecast(latitude: float, longitude: float) -> MarineResponse:
         validated marine response
 
     raises:
+        ValueError: if coordinates are out of valid range
         requests.HTTPError: if api request fails
         ValidationError: if api response doesn't match expected schema
     """
+    validate_coordinates(latitude, longitude)
     # open-meteo marine api endpoint
     url = "https://marine-api.open-meteo.com/v1/marine"
 

@@ -3,6 +3,27 @@ helper utilities for data formatting and conversion
 """
 
 
+def validate_coordinates(latitude: float, longitude: float) -> None:
+    """
+    Validate latitude and longitude are within valid ranges.
+
+    args:
+        latitude: latitude in degrees (-90 to 90)
+        longitude: longitude in degrees (-180 to 180)
+
+    raises:
+        ValueError: if latitude or longitude is out of range
+    """
+    if not -90 <= latitude <= 90:
+        raise ValueError(
+            f"Invalid coordinates: latitude must be between -90 and 90, got {latitude}"
+        )
+    if not -180 <= longitude <= 180:
+        raise ValueError(
+            f"Invalid coordinates: longitude must be between -180 and 180, got {longitude}"
+        )
+
+
 def degrees_to_compass(degrees: float) -> str:
     """
     convert degrees to compass direction (n, ne, e, se, s, sw, w, nw)

@@ -75,13 +75,12 @@ python -m streamlit run frontend/app.py
 
 
 ## Error Handling
+
 The service includes robust error handling for:
 
-Missing or invalid API keys
-Network timeouts
-Invalid coordinates
-
-
+- API request failures
+- Invalid coordinates
+- Network timeouts
 
 ## Response Example: Using Pydantic principles and FastAPI
 
